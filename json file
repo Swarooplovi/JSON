@@ -1,0 +1,32 @@
+import org.json.JSONObject;
+import java.math.BigInteger;
+
+public class PolynomialEvaluator {
+    public static void main(String[] args) {
+        String jsonString = "{ \"keys\": { \"n\": 4, \"k\": 3 }, \"1\": { \"base\": \"10\", \"value\": \"4\" }, \"2\": { \"base\": \"2\", \"value\": \"111\" }, \"3\": { \"base\": \"10\", \"value\": \"12\" }, \"6\": { \"base\": \"4\", \"value\": \"213\" } }";
+        
+        JSONObject jsonObject = new JSONObject(jsonString);
+        int n = jsonObject.getJSONObject("keys").getInt("n");
+        int k = jsonObject.getJSONObject("keys").getInt("k");
+
+        
+        BigInteger result = BigInteger.ZERO;
+
+        for (int i = 1; i <= n; i++) {
+            if (jsonObject.has(String.valueOf(i))) {
+                JSONObject valueObject = jsonObject.getJSONObject(String.valueOf(i));
+                int base = valueObject.getInt("base");
+                String value = valueObject.getString("value");
+
+                
+                BigInteger decimalValue = new BigInteger(value, base);
+                BigInteger kPower = BigInteger.valueOf(k).pow(i - 1); // k^(i-1)
+
+            
+                result = result.add(decimalValue.multiply(kPower));
+            }
+        }
+
+        System.out.println("The result of the polynomial evaluation is: " + result);
+    }
+}
